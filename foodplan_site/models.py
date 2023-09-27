@@ -40,6 +40,11 @@ class Receipt(models.Model):
         'наименование',
         max_length=300,
     )
+    description = models.TextField(
+        'описание',
+        blank=True,
+        null=True,
+    )
 
     def calories(self):
         calories = 0
