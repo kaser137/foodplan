@@ -36,7 +36,7 @@
                         <div class="row" style="vertical-align: middle">
                             <h2>{{receipt.name}}</h2>
                             <div class="col-12 col-sm-6 d-flex flex-column justify-content-between" style="vertical-align: top">
-                                <h6>Описание рецепт.</h6>
+                                <h6>Описание рецепта.</h6>
                                 <h6 style="vertical-align: top">{{receipt.description}}</h6>
                             </div>
                             <div class="col-12 col-sm-6">
@@ -45,11 +45,6 @@
                                     {% for product in products %}
                                     <li class="list-group-item disabled"><small>{{product.product.name}} ({{product.amount}}г.)</small></li>
                                     {% endfor %}
-<!--                                    <li class="list-group-item disabled"><small>ингредиент (500г.)</small></li>-->
-<!--                                    <li class="list-group-item disabled"><small>ингредиент (500г.)</small></li>-->
-<!--                                    <li class="list-group-item disabled"><small>ингредиент (500г.)</small></li>-->
-<!--                                    <li class="list-group-item disabled"><small>ингредиент (500г.)</small></li>-->
-                                </ul>
                                 <small class="link-secondary">Общая калорийность: {{receipt.calories}} ккал</small>
                             </div>
                         </div>

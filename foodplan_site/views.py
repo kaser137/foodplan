@@ -18,7 +18,6 @@ def free_menus(request):
     context ={
         'receipt_chart': receipt_chart
     }
-    print(receipt_chart, '*****************************************')
     return render(request, 'free_menus.html', context=context)
 
 
@@ -32,3 +31,8 @@ def card(request):
             'products': products,
         }
     return render(request, 'card2.html', context=context)
+
+
+def lk(request):
+    return render(request, 'lk.html')
+
