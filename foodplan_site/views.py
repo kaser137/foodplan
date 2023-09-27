@@ -14,7 +14,12 @@ def registration(request):
 
 
 def free_menus(request):
-    return render(request, 'free_menus.html')
+    receipt_chart = Receipt.objects.all().values_list('id', flat=True)[:3]
+    context ={
+        'receipt_chart': receipt_chart
+    }
+    print(receipt_chart, '*****************************************')
+    return render(request, 'free_menus.html', context=context)
 
 
 def card(request):
