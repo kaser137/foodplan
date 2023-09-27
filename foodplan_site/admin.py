@@ -1,3 +1,36 @@
 from django.contrib import admin
 
-# Register your models here.
+from foodplan_site.models import Product, Receipt, ProductInReceipt
+
+
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    pass
+
+
+class ProductInReceiptInline(admin.TabularInline):
+    model = ProductInReceipt
+
+    readonly_fields = [
+        'calories',
+        'allergen',
+    ]
+    extra = 0
+
+
+@admin.register(Receipt)
+class ReceiptAdmin(admin.ModelAdmin):
+    readonly_fields = [
+        'calories'
+    ]
+    inlines = [
+        ProductInReceiptInline,
+    ]
+    extra = 0
+
+
+@admin.register(ProductInReceipt)
+class ProductInReceiptAdmin(admin.ModelAdmin):
+    readonly_fields = [
+        'calories',
+    ]
