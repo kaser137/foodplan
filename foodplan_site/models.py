@@ -1,3 +1,4 @@
+from django.core.exceptions import FieldDoesNotExist
 from django.db import models
 
 
@@ -49,7 +50,9 @@ class Receipt(models.Model):
     def calories(self):
         calories = 0
         for product in self.products.all():
-            calories += product.calories()
+            product_calories = product.calories()
+            if product_calories:
+                calories += product_calories
         return calories
 
     calories.short_description = 'калории'
@@ -78,10 +81,13 @@ class ProductInReceipt(models.Model):
     )
     amount = models.PositiveSmallIntegerField(
         'граммы',
+        null=True,
+        blank=True,
     )
 
     def calories(self):
-        return round(self.amount * self.product.caloric / 100, 2)
+        if self.amount:
+            return round(self.amount * self.product.caloric / 100, 2)
 
     calories.short_description = 'калории'
 
