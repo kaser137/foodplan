@@ -32,7 +32,6 @@ class UserRegistrationForm(UserCreationForm):
         'class': 'form-control'
     }))
 
-
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2')
@@ -41,12 +40,12 @@ class UserRegistrationForm(UserCreationForm):
 class UserProfileForm(UserChangeForm):
 
     username = forms.CharField(widget=forms.TextInput(attrs={
-        'class': 'form-control'
-    }))
-    email = forms.CharField(widget=forms.EmailInput(attrs={
         'class': 'form-control',
         'readonly': True
     }))
+    email = forms.CharField(widget=forms.EmailInput(attrs={
+        'class': 'form-control'
+    }), required=False)
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'form-control'
     }))
@@ -55,8 +54,8 @@ class UserProfileForm(UserChangeForm):
     }))
     image = forms.ImageField(widget=forms.FileInput(attrs={
         'class': 'form-control'
-    }))
+    }), required=False)
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2', 'image')
+        fields = ('username', 'email', 'password1', 'password2')
