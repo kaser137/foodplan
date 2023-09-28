@@ -37,7 +37,7 @@ def registration(request):
 
 def profile(request):
     if request.method == 'POST':
-        form = UserProfileForm(instance=request.user, data=request.POST)
+        form = UserProfileForm(instance=request.user, data=request.POST, files=request.FILES)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('users:profile'))
@@ -47,3 +47,8 @@ def profile(request):
         form = UserProfileForm(instance=request.user)
     context = {'form': form}
     return render(request, 'users/lk.html', context)
+
+
+def logout(request):
+    auth.logout(request)
+    return HttpResponseRedirect(reverse('index'))
