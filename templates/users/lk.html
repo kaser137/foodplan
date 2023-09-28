@@ -15,13 +15,12 @@
                     
                     <div class="card col-12 col-md-2 p-3 mb-3 d-flex flex-column align-items-center foodplan__shadow">
                         <div class="position-relative">
-                            <img src="{% static 'img/test_avatar.png' %}" alt="" width="100" height="100" class="rounded-pill">
-                            <span class="badge rounded-circle position-absolute bottom-0 end-0 foodplan__bg_green avatar__plus"><a href="#"
-                                    class="link-dark text-decoration-none align-middle">+</a></span>
+                            <img src="{% if user.image %} {{ user.image.url }} {% else %} {% static 'img/test_avatar.png' %} {% endif %}" alt="" width="100" height="100" class="rounded-pill">
                         </div>
-                        <h3 class="card-title text-center">Tim</h3>
+                        <h3 class="card-title text-center">"{{ user.username }}"</h3>
                         <div class="d-block">
-                            <button class="btn btn-outline-success shadow-none foodplan_green foodplan__border_green">Выйти</button>
+                            <button class="btn btn-outline-success shadow-none foodplan_green foodplan__border_green"
+                            onclick="window.location.href='{% url 'users:logout' %}'">Выйти</button>
                         </div>
                     </div>
 
@@ -37,12 +36,11 @@
                             </ul>
                             <div class="tab-content mt-2">
                                 <div class="tab-pane fade show active" id="data">
-                                    <form action="{% url 'users:profile' %}" method="post">
+                                    <form action="{% url 'users:profile' %}" method="post" enctype="multipart/form-data">
                                         {% csrf_token %}
                                         <div class="mb-3">
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <label for="{{ form.username.id_for_label }}" class="form-label">Логин</label>
-                                                <small><a href="#" class="link-dark foodplan_green">изменить</a></small>
                                             </div>
                                         
                                             {{ form.username }}
@@ -52,26 +50,25 @@
                                             {{ form.email }}
                                         </div>
                                         <div class="mb-3">
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <label for="{{ form.password1.id_for_label }}" class="form-label">Пароль</label>
-                                                <small><a href="#" class="link-dark foodplan_green">изменить</a></small>
-                                            </div>
-                                            {{ form.password1 }}
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="{{ form.password2.id_for_label }}" class="form-label">Подтверждение пароля</label>
-                                            {{ form.password2 }}
+                                            <label for="{{ form.image.id_for_label}}" class="custom-file">Фото</label>
+                                            {{ form.image }}
                                         </div>
                                         <div class="d-block">
                                             <button type="submit" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">Сохранить
                                                 изменения</button>
                                         </div>
                                     </form>
+                                    {% if form.errors %}
+                                        <div class="alert alert-warning alert-dismissible fade show" role="alert"
+                                        style="margin-top: 50px;">
+                                        {{ form.errors }}
+                                        </div>
+                                    {% endif %}
                                 </div>
                                 <div class="tab-pane fade" id="menu">
                                     <div class="row">
                                         <div class="col-2">
-                                            <img src="img/circle1.png" alt="" class="w-100">
+                                            <img src="{% static 'img/circle1.png'%}" alt="" class="w-100">
                                         </div>
                                         <div class="col-10 col-md-10">
                                             <div class="row">
