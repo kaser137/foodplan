@@ -18,17 +18,17 @@ import os
 
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, re_path
+from django.urls import path, include
 
 from foodplan import settings
-from foodplan_site.views import index, registration, free_menus, card
+from foodplan_site.views import index, free_menus, card
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='index'),
-    path('registration/', registration, name='registration'),
     path('free_menus/', free_menus, name='free_menus'),
     path('card/', card, name='card'),
+    path('users/', include('users.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
