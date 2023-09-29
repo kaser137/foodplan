@@ -57,3 +57,7 @@ def profile(request):
 def logout(request):
     auth.logout(request)
     return HttpResponseRedirect(reverse('index'))
+
+
+def order(request):
+    return render(request, 'users/order.html')
