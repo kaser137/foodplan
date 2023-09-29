@@ -73,30 +73,46 @@
                                         <div class="col-10 col-md-10">
                                             <div class="row">
                                                 <div class="col-12">
-                                                    <h2>Название подписки</h2>
+                                                    {% for order in orders %}
+                                                    <h2>{{order}}</h2>
                                                 </div>
                                                 <div class="col-md-12 col-lg-9">
-                                                    <h6>Описание подписки Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eius saepe ea nobis necessitatibus
-                                                        consectetur rem! Eligendi assumenda facere sint quibusdam dolorem quasi doloribus nemo, temporibus molestiae
-                                                        distinctio cum laboriosam sed. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eius saepe ea nobis
-                                                        necessitatibus consectetur rem! Eligendi
-                                                        assumenda facere sint quibusdam dolorem quasi doloribus nemo, temporibus molestiae distinctio cum laboriosam
-                                                        sed.</h6>
-                                                </div>
-                                                <div class="col-md-12 col-lg-3 text-muted d-flex flex-column justify-content-between">
-                                                    <div class="d-flex flex-row justify-content-between">
-                                                        <small>Персоны: </small><small>3</small>
-                                                    </div>
-                                                    <div class="d-flex flex-row justify-content-between">
-                                                        <small>Аллергии: </small><small>нет</small>
-                                                    </div>
-                                                    <div class="d-flex flex-row justify-content-between">
-                                                        <small>Калории: </small><small>1400</small>
-                                                    </div>
-                                                    <div class="d-flex flex-row justify-content-between">
-                                                        <small>Кол-во приёмов пищи: </small><small>4</small>
-                                                    </div>
-                                                    
+
+                                                    {% for i in order.days %}
+
+                                                    <h6>
+                                                        <h5>День {{i.num}}: <br></h5>
+                                                        {% if i.breakfast %}
+                                                        {% if i.breakfast == "время голодать" %}
+                                                            <p>Завтрака нет: {{i.breakfast}}</p>
+                                                        {% else %}
+                                                            <p><a href="{% url 'card' %}?receipt_id={{i.breakfast.id}}&next={{path}}">Завтрак: {{i.breakfast.name}}</a></p>
+                                                        {% endif %}
+                                                        {% endif %}
+                                                        {% if i.diner %}
+                                                        {% if i.diner == "время голодать" %}
+                                                            <p>Обеда нет: {{i.diner}}</p>
+                                                        {% else %}
+                                                            <p><a href="{% url 'card' %}?receipt_id={{i.diner.id}}&next={{path}}">Обед: {{i.diner.name}}</a></p>
+                                                        {% endif %}
+                                                        {% endif %}
+                                                        {% if i.supper %}
+                                                        {% if i.supper == "время голодать" %}
+                                                            <p>Ужина нет: {{i.supper}}</p>
+                                                        {% else %}
+                                                            <p><a href="{% url 'card' %}?receipt_id={{i.supper.id}}&next={{path}}">Ужин: {{i.supper.name}}</a></p>
+                                                        {% endif %}
+                                                        {% endif %}
+                                                        {% if i.dessert %}
+                                                        {% if i.dessert == "время голодать" %}
+                                                            <p>Десерта нет: {{i.supper}}</p>
+                                                        {% else %}
+                                                            <p><a href="{% url 'card' %}?receipt_id={{i.dessert.id}}&next={{path}}">Десерт: {{i.dessert.name}}</a></p>
+                                                        {% endif %}
+                                                        {% endif %}
+                                                    </h6>
+                                                    {% endfor %}
+                                                    {% endfor %}
                                                 </div>
                                             </div>
                                         </div>

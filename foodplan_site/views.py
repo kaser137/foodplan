@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 
 from foodplan_site.models import Receipt
 
@@ -27,14 +28,16 @@ def free_menus(request):
 
 def card(request):
     receipt_id = request.GET.get('receipt_id', None)
-    print(receipt_id)
-    print(type(receipt_id))
+    path_u = request.GET.get('next', None)
     if receipt_id and receipt_id != 'None':
         receipt = Receipt.objects.get(id=receipt_id)
         products = receipt.products.all()
+        user_id = request.user.id
         context = {
             'receipt': receipt,
             'products': products,
+            'user_id': user_id,
+            'lk': path_u
         }
         return render(request, 'card2.html', context=context)
     else:

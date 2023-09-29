@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponseRedirect
 from django.contrib import auth
 from django.urls import reverse
 
-from users.models import User
+from foodplan_site.functions import menu
 from users.forms import UserLoginForm, UserRegistrationForm, UserProfileForm
 
 
@@ -45,7 +45,12 @@ def profile(request):
             print(form.errors)
     else:
         form = UserProfileForm(instance=request.user)
-    context = {'form': form}
+    orders = menu(request.user.id)
+    context = {
+        'form': form,
+        'orders': orders,
+        'path': request.path
+    }
     return render(request, 'users/lk.html', context)
 
 

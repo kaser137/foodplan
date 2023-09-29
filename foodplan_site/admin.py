@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from foodplan_site.models import Product, Receipt, ProductInReceipt
+from foodplan_site.models import Product, Receipt, ProductInReceipt, Order, Price
 
 
 @admin.register(Product)
@@ -34,3 +34,15 @@ class ProductInReceiptAdmin(admin.ModelAdmin):
     readonly_fields = [
         'calories',
     ]
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    readonly_fields = [
+        'cost',
+    ]
+
+
+@admin.register(Price)
+class PriceAdmin(admin.ModelAdmin):
+    pass
