@@ -27,6 +27,22 @@ class Product(models.Model):
     caloric = models.PositiveSmallIntegerField(
         'калории',
     )
+    classic = models.BooleanField(
+        'классик',
+        default=False,
+    )
+    lowcarb = models.BooleanField(
+        'низкоуглеводная',
+        default=False,
+    )
+    vegan = models.BooleanField(
+        'вегетарианская',
+        default=False,
+    )
+    keto = models.BooleanField(
+        'кето',
+        default=False,
+    )
 
     class Meta:
         verbose_name = 'продукт'
@@ -135,6 +151,22 @@ class Order(models.Model):
         on_delete=models.CASCADE,
         related_name='orders'
     )
+    classic = models.BooleanField(
+        'классик',
+        default=False,
+    )
+    lowcarb = models.BooleanField(
+        'низкоуглеводная',
+        default=False,
+    )
+    vegan = models.BooleanField(
+        'вегетарианская',
+        default=False,
+    )
+    keto = models.BooleanField(
+        'кето',
+        default=False,
+    )
     period = models.IntegerField(
         'период',
         choices=PERIOD,
@@ -164,6 +196,10 @@ class Order(models.Model):
         'десерт',
         default=False,
     )
+    paid = models.BooleanField(
+        'оплачен',
+        default=False,
+    )
     person = models.PositiveSmallIntegerField(
         'количество персон',
         default=1
@@ -180,6 +216,18 @@ class Order(models.Model):
                 amount += self.period * 30 * attrs_price[attr]
         return amount*self.person
 
+    def diet(self):
+        dietic = []
+        if self.classic:
+            dietic.append('класссика')
+        if self.lowcarb:
+            dietic.append('низкоуглеводная')
+        if self.vegan:
+            dietic.append('вегетарианская')
+        if self.keto:
+            dietic.append('кето')
+        return dietic
+
     cost.short_description = 'стоимость'
 
     def set_allergic(self, x):
@@ -193,7 +241,7 @@ class Order(models.Model):
         verbose_name_plural = 'заказы'
 
     def __str__(self):
-        return f'{self.user}__{self.period} мес.'
+        return f'{self.diet()}__{self.period} мес.'
 
 
 class Price(models.Model):
