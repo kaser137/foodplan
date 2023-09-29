@@ -1,4 +1,5 @@
 import random
+
 from foodplan_site.models import Receipt, Product, ProductInReceipt, Order
 
 
@@ -11,26 +12,41 @@ def choosing(some_list):
 def menu(user_id):
     orders = Order.objects.filter(user_id=user_id).filter(paid=True)
     for order in orders:
-        print('order>>', order)
         invalid_products_in_receipt = ProductInReceipt.objects.exclude(
             product__in=Product.objects.exclude(specific__in=order.allergic))
         wrong_products = []
         if order.classic:
-            for i in Product.objects.exclude(classic=True).values_list('id', flat=True):
-                if i not in wrong_products:
-                    wrong_products.append(i)
+            wrong_products = [i for i in Product.objects.exclude(classic=True).values_list('id', flat=True)]
         if order.lowcarb:
-            for i in Product.objects.exclude(lowcarb=True).values_list('id', flat=True):
-                if i not in wrong_products:
-                    wrong_products.append(i)
+            if not wrong_products and not order.classic:
+                wrong_products = [i for i in Product.objects.exclude(lowcarb=True).values_list('id', flat=True)]
+            else:
+                w = []
+                for i in Product.objects.exclude(lowcarb=True).values_list('id', flat=True):
+                    for k in wrong_products:
+                        if k == i:
+                            w.append(k)
+                    wrong_products = w
         if order.vegan:
-            for i in Product.objects.exclude(vegan=True).values_list('id', flat=True):
-                if i not in wrong_products:
-                    wrong_products.append(i)
+            if not wrong_products and not order.classic and not order.lowcarb:
+                wrong_products = [i for i in Product.objects.exclude(vegan=True).values_list('id', flat=True)]
+            else:
+                w = []
+                for i in Product.objects.exclude(vegan=True).values_list('id', flat=True):
+                    for k in wrong_products:
+                        if k == i:
+                            w.append(k)
+                    wrong_products = w
         if order.keto:
-            for i in Product.objects.exclude(keto=True).values_list('id', flat=True):
-                if i not in wrong_products:
-                    wrong_products.append(i)
+            if not wrong_products and not order.classic and not order.lowcarb and not order.vegan:
+                wrong_products = [i for i in Product.objects.exclude(keto=True).values_list('id', flat=True)]
+            else:
+                w = []
+                for i in Product.objects.exclude(keto=True).values_list('id', flat=True):
+                    for k in wrong_products:
+                        if k == i:
+                            w.append(k)
+                    wrong_products = w
         wrong_rec = ProductInReceipt.objects.filter(product_id__in=wrong_products)
         receipts = [k for k in Receipt.objects.all() if
                     k not in [i.receipt for i in invalid_products_in_receipt] and k not in [i.receipt for i in
