@@ -21,7 +21,8 @@ def free_menus(request):
         except IndexError:
             receipt_chart.append(None)
     context = {
-        'receipt_chart': receipt_chart
+        'receipt_chart': receipt_chart,
+        'path': request.path
     }
     return render(request, 'free_menus.html', context=context)
 
