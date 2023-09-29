@@ -29,12 +29,13 @@
                             <li class="nav-item align-items-center d-md-flex flex-grow-1 justify-content-end">
                                 <button class="btn btn-outline-success me-2 shadow-none foodplan_green foodplan__border_green"
                                 onclick="window.location.href='{% url 'users:profile' %}'">Личный кабинет</button>
+                                <button class="btn btn-outline-success me-2 shadow-none foodplan_green foodplan__border_green"
+                                onclick="window.location.href='{% url 'users:order' %}'">Подписка</button>
                                 <button class="btn btn-outline-success shadow-none foodplan_green foodplan__border_green"
                                 onclick="window.location.href='{% url 'users:logout' %}'">Выйти</button>
                             </li>
                         {% else %}
                             <li class="nav-item align-items-center d-md-flex flex-grow-1 justify-content-end">
-                                <button class="btn btn-outline-success me-2 shadow-none foodplan_green foodplan__border_green">Подписка</button>
                                 <button class="btn btn-outline-success shadow-none foodplan_green foodplan__border_green"
                                 onclick="window.location.href='{% url 'users:login' %}'">Войти</button>
                             </li>

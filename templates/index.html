@@ -12,8 +12,13 @@
                             Вы получаете рецепты + список продуктов.<br>
                             Больше не нужно думать, что готовить.</h4>
                         <div class="d-block mt-3">
+                            {% if user.is_authenticated %}
+                            <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green"
+                                    onclick="window.location.href='{% url 'users:order' %}'">Хочу попробовать</button>
+                            {% else %}
                             <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green"
                                     onclick="window.location.href='{% url 'users:registration' %}'">Хочу попробовать</button>
+                            {% endif %}
                             <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green"
                                     onclick="window.location.href='{% url 'free_menus' %}'">Бесплатные рецепты</button>
                         </div>
