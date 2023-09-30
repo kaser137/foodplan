@@ -77,8 +77,24 @@ def order(request):
             'dinner': request.GET['select3'],
             'dessert': request.GET['select4'],
             'people_number': int(request.GET['select5']),
-            'intolerances': [],
+            'classic': False,
+            'lowcarb': False,
+            'vegan': False,
+            'keto': False,
+            'allergic': [],
         }
+        if request.GET['foodtype'] == 'classic':
+            order_data['classic'] = True
+        if request.GET['foodtype'] == 'low':
+            order_data['lowcarb'] = True
+        if request.GET['foodtype'] == 'veg':
+            order_data['vegan'] = True
+        if request.GET['foodtype'] == 'keto':
+            order_data['keto'] = True
+        for num_allergen in range(1,7):
+            allergen = f'allergy{num_allergen}'           
+            if allergen in request.GET:            
+                order_data['allergic'].append(num_allergen)                                    
         print(order_data)
         # for foods_intolerance in foods_intolerances:
         #     foods_intolerance = str(foods_intolerance)
@@ -94,6 +110,11 @@ def order(request):
             dessert=order_data['dessert'],
             person=order_data['people_number'],
             period=order_data['month_duration'],
+            classic=order_data['classic'],
+            lowcarb=order_data['lowcarb'],
+            vegan=order_data['vegan'],
+            keto=order_data['keto'],
+            allergic=order_data['allergic']
             # total_sum=round(MONTH_PRICE * order_data['month_duration'], 2),
         )
         # order.intolerance.set(order_data['intolerances'])
@@ -107,7 +128,7 @@ def order(request):
         # confirmation_url = payment.confirmation.confirmation_url
 
         # order.yookassa_id = payment.id
-        # order.save()
+        order.save()
 
         # return redirect(confirmation_url)
     return render(request, 'users/order.html')
