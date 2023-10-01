@@ -1,6 +1,6 @@
 import random
 
-from foodplan_site.models import Receipt, Product, ProductInReceipt, Order
+from foodplan_site.models import Receipt, Product, ProductInReceipt, Order, Price
 
 
 def choosing(some_list):
@@ -47,11 +47,11 @@ def menu(user_id):
                         if k == i:
                             w.append(k)
                     wrong_products = w
-        wrong_rec = ProductInReceipt.objects.filter(product_id__in=wrong_products)
+        wrong_products_in_receipt = ProductInReceipt.objects.filter(product_id__in=wrong_products)
         receipts = [k for k in Receipt.objects.all() if
                     k not in [i.receipt for i in invalid_products_in_receipt] and k not in [i.receipt for i in
-                                                                                            wrong_rec]]
-        order.sut = range(1, order.period * 30 + 1)
+                                                                                            wrong_products_in_receipt]]
+        # order.sut = range(1, order.period * 30 + 1)
         order.days = []
         for day in range(0, order.period * 30):
             order.days.append({})
@@ -59,9 +59,9 @@ def menu(user_id):
             if order.breakfast:
                 receipts_br = [k for k in receipts if k.breakfast]
                 order.days[day]['breakfast'] = choosing(receipts_br)
-            if order.diner:
-                receipts_din = [k for k in receipts if k.diner]
-                order.days[day]['diner'] = choosing(receipts_din)
+            if order.dinner:
+                receipts_din = [k for k in receipts if k.dinner]
+                order.days[day]['dinner'] = choosing(receipts_din)
             if order.supper:
                 receipts_sup = [k for k in receipts if k.supper]
                 order.days[day]['supper'] = choosing(receipts_sup)
@@ -69,3 +69,15 @@ def menu(user_id):
                 receipts_des = [k for k in receipts if k.dessert]
                 order.days[day]['dessert'] = choosing(receipts_des)
     return orders
+
+
+def cost(dictionary):
+    price = Price.objects.last()
+    attrs_price = price.__dict__
+    del attrs_price['id'], attrs_price['_state']
+    amount = 0
+    for attr in attrs_price:
+        attr_order = dictionary.get(attr, None)
+        if attr_order:
+            amount += dictionary['period'] * 30 * attrs_price[attr]
+    return amount*dictionary['person']*(1-dictionary['discount']/100)

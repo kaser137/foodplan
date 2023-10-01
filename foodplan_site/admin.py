@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from foodplan_site.models import Product, Receipt, ProductInReceipt, Order, Price
+from foodplan_site.models import Product, Receipt, ProductInReceipt, Order, Price, Promo
 
 
 @admin.register(Product)
@@ -45,4 +45,9 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(Price)
 class PriceAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Promo)
+class PromoAdmin(admin.ModelAdmin):
     pass

@@ -1,16 +1,17 @@
 import json
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from users.models import User
 
 
 class Product(models.Model):
     SPECIFIC_OF_ALLERGEN = (
-        ('0', 'Рыба и морепродукты'),
-        ('1', 'Мясо'),
-        ('2', 'Зерновые'),
-        ('3', 'Продукты пчеловодства'),
-        ('4', 'Орехи и бобовые'),
-        ('5', 'Молочные продукты'),
+        ('10', 'Рыба и морепродукты'),
+        ('2', 'Мясо'),
+        ('3', 'Зерновые'),
+        ('4', 'Продукты пчеловодства'),
+        ('5', 'Орехи и бобовые'),
+        ('6', 'Молочные продукты'),
     )
     name = models.CharField(
         'наименование',
@@ -67,7 +68,7 @@ class Receipt(models.Model):
         'завтрак',
         default=False,
     )
-    diner = models.BooleanField(
+    dinner = models.BooleanField(
         'обед',
         default=False,
     )
@@ -184,7 +185,7 @@ class Order(models.Model):
         'завтрак',
         default=False,
     )
-    diner = models.BooleanField(
+    dinner = models.BooleanField(
         'обед',
         default=False,
     )
@@ -204,6 +205,11 @@ class Order(models.Model):
         'количество персон',
         default=1
     )
+    discount = models.PositiveSmallIntegerField(
+        'процент скидки',
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+        default=0,
+    )
 
     def cost(self):
         price = Price.objects.last()
@@ -214,7 +220,8 @@ class Order(models.Model):
             attr_order = getattr(self, attr, None)
             if attr_order:
                 amount += self.period * 30 * attrs_price[attr]
-        return amount*self.person
+
+        return amount * self.person * (1 - self.discount / 100)
 
     def diet(self):
         dietic = []
@@ -241,12 +248,13 @@ class Order(models.Model):
         verbose_name_plural = 'заказы'
 
     def __str__(self):
-        return f'{self.diet()}__{self.period} мес.'
+        name = '__'.join(self.diet())
+        return f'{name}__{self.period} мес.'
 
 
 class Price(models.Model):
     breakfast = models.FloatField('цена завтрака')
-    diner = models.FloatField('цена обеда')
+    dinner = models.FloatField('цена обеда')
     supper = models.FloatField('цена ужина')
     dessert = models.FloatField('цена дессерта')
 
@@ -256,3 +264,21 @@ class Price(models.Model):
 
     def __str__(self):
         return f'прайс_{self.id}'
+
+
+class Promo(models.Model):
+    promokod = models.CharField(
+        'промокод',
+        max_length=300
+    )
+    discount = models.PositiveSmallIntegerField(
+        'процент скидки',
+        validators=[MinValueValidator(0), MaxValueValidator(100)]
+    )
+
+    class Meta:
+        verbose_name = 'промокод'
+        verbose_name_plural = 'промокоды'
+
+    def __str__(self):
+        return f'промокод: {self.promokod}, процент скидки: {self.discount}'

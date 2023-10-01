@@ -90,11 +90,11 @@
                                                             <p><a href="{% url 'card' %}?receipt_id={{i.breakfast.id}}&next={{path}}">Завтрак: {{i.breakfast.name}}</a></p>
                                                         {% endif %}
                                                         {% endif %}
-                                                        {% if i.diner %}
-                                                        {% if i.diner == "время голодать" %}
-                                                            <p>Обеда нет: {{i.diner}}</p>
+                                                        {% if i.dinner %}
+                                                        {% if i.dinner == "время голодать" %}
+                                                            <p>Обеда нет: {{i.dinner}}</p>
                                                         {% else %}
-                                                            <p><a href="{% url 'card' %}?receipt_id={{i.diner.id}}&next={{path}}">Обед: {{i.diner.name}}</a></p>
+                                                            <p><a href="{% url 'card' %}?receipt_id={{i.dinner.id}}&next={{path}}">Обед: {{i.dinner.name}}</a></p>
                                                         {% endif %}
                                                         {% endif %}
                                                         {% if i.supper %}
@@ -106,7 +106,7 @@
                                                         {% endif %}
                                                         {% if i.dessert %}
                                                         {% if i.dessert == "время голодать" %}
-                                                            <p>Десерта нет: {{i.supper}}</p>
+                                                            <p>Десерта нет: {{i.dessert}}</p>
                                                         {% else %}
                                                             <p><a href="{% url 'card' %}?receipt_id={{i.dessert.id}}&next={{path}}">Десерт: {{i.dessert.name}}</a></p>
                                                         {% endif %}
