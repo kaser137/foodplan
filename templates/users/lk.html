@@ -67,9 +67,9 @@
                                 </div>
                                 <div class="tab-pane fade" id="menu">
                                     <div class="row">
-                                        <div class="col-2">
-                                            <img src="{% static 'img/circle1.png'%}" alt="" class="w-100">
-                                        </div>
+<!--                                        <div class="col-2">-->
+<!--                                            <img src="{% static 'img/circle1.png'%}" alt="" class="w-100">-->
+<!--                                        </div>-->
                                         <div class="col-10 col-md-10">
                                             <div class="row">
                                                 <div class="col-12">
@@ -88,13 +88,17 @@
                                                             <p>Завтрака нет: {{i.breakfast}}</p>
                                                         {% else %}
                                                             <p><a href="{% url 'card' %}?receipt_id={{i.breakfast.id}}&next={{path}}">Завтрак: {{i.breakfast.name}}</a></p>
+                                                            <div class="col-2">
+                                                                <img src="{% if i.breakfast.image %} {{ i.breakfast.image.url }} {% else %} {% static 'img/circle1.png' %} {% endif %}"
+                                                                     alt="" class="w-100">
+                                                            </div>
                                                         {% endif %}
                                                         {% endif %}
                                                         {% if i.dinner %}
                                                         {% if i.dinner == "время голодать" %}
                                                             <p>Обеда нет: {{i.dinner}}</p>
                                                         {% else %}
-                                                            <p><a href="{% url 'card' %}?receipt_id={{i.dinner.id}}&next={{path}}">Обед: {{i.dinner.name}}</a></p>
+
                                                         {% endif %}
                                                         {% endif %}
                                                         {% if i.supper %}
@@ -102,6 +106,10 @@
                                                             <p>Ужина нет: {{i.supper}}</p>
                                                         {% else %}
                                                             <p><a href="{% url 'card' %}?receipt_id={{i.supper.id}}&next={{path}}">Ужин: {{i.supper.name}}</a></p>
+                                                            <div class="col-2">
+                                                                <img src="{% if i.supper.image %} {{ i.supper.image.url }} {% else %} {% static 'img/circle1.png' %} {% endif %}"
+                                                                     alt="" class="w-100">
+                                                            </div>
                                                         {% endif %}
                                                         {% endif %}
                                                         {% if i.dessert %}
@@ -109,6 +117,10 @@
                                                             <p>Десерта нет: {{i.dessert}}</p>
                                                         {% else %}
                                                             <p><a href="{% url 'card' %}?receipt_id={{i.dessert.id}}&next={{path}}">Десерт: {{i.dessert.name}}</a></p>
+                                                            <div class="col-2">
+                                                                <img src="{% if i.supper.image %} {{ i.supper.image.url }} {% else %} {% static 'img/circle1.png' %} {% endif %}"
+                                                                     alt="" class="w-100">
+                                                            </div>
                                                         {% endif %}
                                                         {% endif %}
                                                     </h6>

@@ -64,6 +64,9 @@ class Receipt(models.Model):
         blank=True,
         null=True,
     )
+    image = models.ImageField(
+        'фото рецепта',
+    )
     breakfast = models.BooleanField(
         'завтрак',
         default=False,
