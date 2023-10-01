@@ -18,8 +18,9 @@
                 <a class="navbar-brand" href="#">
                     <img src="{% static 'img/logo.8d8f24edbb5f.svg' %}" height="55" width="189" alt="">
                 </a>
-                <h3 class="text-secondary mt-2 me-2">Стоимость: 00000₽</h3>
-                <button form="order" type="submit" class="btn shadow-none btn-sm btn-outline-success foodplan_green foodplan__border_green">Оплатить</button>
+                <h3 class="text-secondary mt-2 me-2">Стоимость: {{cost}}₽</h3>
+                <button  type="submit" class="btn shadow-none btn-sm btn-outline-success foodplan_green foodplan__border_green"
+                onclick="window.location.href='{% url 'users:profile' %}'">Личный кабинет</button>
             </div>
         </nav>
     </header>
@@ -170,15 +171,20 @@
                     </tbody>
                 </table>
                 <button type="submit" id="TableSubmit" class="d-none"></button>
+                    <div class="card d-flex flex-row align-items-baseline mb-5 p-3 foodplan__bg_grey">
+                    <label class="form-label me-2">Промокод</label>
+                    <input type="text" class="form-control me-2" value="" name="promo">
+                    <button type="submit" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">Применить</button>
+                </div>
                 </form>
 
-                <form class="card d-flex flex-row align-items-baseline mb-5 p-3 foodplan__bg_grey">
-                    <label for="exampleInputPassword1" class="form-label me-2">Промокод</label>
-                    <input type="password" class="form-control me-2" id="password">
-                    <button type="submit" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">Применить</button>
-                </form>
+<!--                <div class="card d-flex flex-row align-items-baseline mb-5 p-3 foodplan__bg_grey">-->
+<!--                    <label class="form-label me-2">Промокод</label>-->
+<!--                    <input type="text" class="form-control me-2" >-->
+<!--                    <button type="submit" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">Применить</button>-->
+<!--                </div>-->
                 <div class="d-flex justify-content-center my-5">
-                    <button form="order" type="submit" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green w-50">Оплатить</button>
+                    <button form="order" value="1" name="pay" type="submit" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green w-50">Оплатить</button>
                 </div>
             </div>
         </section>

@@ -94,15 +94,10 @@
                                                             </div>
                                                         {% endif %}
                                                         {% endif %}
-                                                        {% if i.diner %}
-                                                        {% if i.diner == "время голодать" %}
-                                                            <p>Обеда нет: {{i.diner}}</p>
+                                                        {% if i.dinner %}
+                                                        {% if i.dinner == "время голодать" %}
+                                                            <p>Обеда нет: {{i.dinner}}</p>
                                                         {% else %}
-                                                            <p><a href="{% url 'card' %}?receipt_id={{i.diner.id}}&next={{path}}">Обед: {{i.diner.name}}</a></p>
-                                                            <div class="col-2">
-                                                                <img src="{% if i.diner.image %} {{ i.diner.image.url }} {% else %} {% static 'img/circle1.png' %} {% endif %}"
-                                                                     alt="" class="w-100">
-                                                            </div>
 
                                                         {% endif %}
                                                         {% endif %}
@@ -119,7 +114,7 @@
                                                         {% endif %}
                                                         {% if i.dessert %}
                                                         {% if i.dessert == "время голодать" %}
-                                                            <p>Десерта нет: {{i.supper}}</p>
+                                                            <p>Десерта нет: {{i.dessert}}</p>
                                                         {% else %}
                                                             <p><a href="{% url 'card' %}?receipt_id={{i.dessert.id}}&next={{path}}">Десерт: {{i.dessert.name}}</a></p>
                                                             <div class="col-2">

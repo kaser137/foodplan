@@ -1,11 +1,23 @@
-from django.shortcuts import render, HttpResponseRedirect
+from django.shortcuts import render, HttpResponseRedirect, redirect
 from django.contrib import auth
 from django.urls import reverse
+from django.utils.datastructures import MultiValueDictKeyError
+from django.utils.http import urlencode
 
+from foodplan_site import functions
+import foodplan_site
 from foodplan_site.functions import menu
 from users.forms import UserLoginForm, UserRegistrationForm, UserProfileForm
 from users.models import User
-from foodplan_site.models import Order
+from foodplan_site.models import Order, Promo
+from yookassa import Configuration, Payment
+from environs import Env
+import uuid
+
+env = Env()
+env.read_env()
+ACCOUNT_ID = env('YOUKASSA_ACCOUNT_ID')
+U_KEY = env('U_KEY')
 
 
 def login(request):
@@ -63,72 +75,91 @@ def logout(request):
 
 def order(request):
     user = User.objects.get(username=request.user)
-    MONTH_PRICE = 300
-    foods_intolerances = ['Рыба и морепродукты', 'Мясо', 'Зерновые', 'Продукты пчеловодства', 'Орехи и бобовые', 'Молочные продукты']
-    context = {
-        'foods_intolerances': foods_intolerances,
-        'month_price': MONTH_PRICE,
-    }
     if request.GET:
+        order_id = request.GET.get('?!@', None)
+        if order_id:
+            order = Order.objects.get(id=order_id)
+            order.paid = True
+            order.save()
+            return render(request, 'users/order.html')
+
         order_data = {
-            'month_duration': int(request.GET['month_duration']),
+            'period': int(request.GET['month_duration']),
             'breakfast': request.GET['select1'],
-            'lunch': request.GET['select2'],
-            'dinner': request.GET['select3'],
+            'dinner': request.GET['select2'],
+            'supper': request.GET['select3'],
             'dessert': request.GET['select4'],
-            'people_number': int(request.GET['select5']),
+            'person': int(request.GET['select5']) + 1,
             'classic': False,
             'lowcarb': False,
             'vegan': False,
             'keto': False,
             'allergic': [],
+            'promo': request.GET['promo'],
         }
-        if request.GET['foodtype'] == 'classic':
+        try:
+            if request.GET['foodtype'] == 'classic':
+                order_data['classic'] = True
+            if request.GET['foodtype'] == 'low':
+                order_data['lowcarb'] = True
+            if request.GET['foodtype'] == 'veg':
+                order_data['vegan'] = True
+            if request.GET['foodtype'] == 'keto':
+                order_data['keto'] = True
+        except MultiValueDictKeyError:
             order_data['classic'] = True
-        if request.GET['foodtype'] == 'low':
-            order_data['lowcarb'] = True
-        if request.GET['foodtype'] == 'veg':
-            order_data['vegan'] = True
-        if request.GET['foodtype'] == 'keto':
-            order_data['keto'] = True
-        for num_allergen in range(1,7):
-            allergen = f'allergy{num_allergen}'           
-            if allergen in request.GET:            
-                order_data['allergic'].append(num_allergen)                                    
-        print(order_data)
-        # for foods_intolerance in foods_intolerances:
-        #     foods_intolerance = str(foods_intolerance)
-        #     if foods_intolerance in request.GET:
-        #         intolerance_id = request.GET[foods_intolerance]
-        #         order_data['intolerances'].append(foods_intolerances.get(id=intolerance_id))
+        for num_allergen in range(1, 7):
+            allergen = f'allergy{num_allergen}'
+            if allergen in request.GET:
+                order_data['allergic'].append(num_allergen)
+        try:
+            promo = Promo.objects.get(promokod=order_data['promo'])
+            order_data['discount'] = promo.discount
+        except foodplan_site.models.Promo.DoesNotExist:
+            order_data['discount'] = 0
 
-        order = Order.objects.create(
-            user=user,
-            breakfast=order_data['breakfast'],
-            diner=order_data['dinner'],
-            supper=order_data['lunch'],
-            dessert=order_data['dessert'],
-            person=order_data['people_number'],
-            period=order_data['month_duration'],
-            classic=order_data['classic'],
-            lowcarb=order_data['lowcarb'],
-            vegan=order_data['vegan'],
-            keto=order_data['keto'],
-            allergic=order_data['allergic']
-            # total_sum=round(MONTH_PRICE * order_data['month_duration'], 2),
-        )
-        # order.intolerance.set(order_data['intolerances'])
-        # description = f"""
-        #             Подписка на {order.month_count} месяц(а)
-        #             Аллергены: {[intolerance.name for intolerance in order_data['intolerances']]}
-        #             """
-        # return_url = f'http://{request.META["HTTP_HOST"]}/?' + urlencode({'order_id': order.id})
+        cost = functions.cost(order_data)
+        try:
+            request.GET['pay']
+            order = Order.objects.create(
+                user=user,
+                breakfast=order_data['breakfast'],
+                dinner=order_data['dinner'],
+                supper=order_data['supper'],
+                dessert=order_data['dessert'],
+                person=order_data['person'],
+                period=order_data['period'],
+                classic=order_data['classic'],
+                lowcarb=order_data['lowcarb'],
+                vegan=order_data['vegan'],
+                keto=order_data['keto'],
+                allergic=order_data['allergic'],
+                discount=order_data['discount']
+            )
+            order.save()
+            redirect_url = 'http://127.0.0.1:8000/users/order/' + '?' + urlencode({'?!@': order.id})
+            Configuration.account_id = ACCOUNT_ID
+            Configuration.secret_key = U_KEY
+            payment = Payment.create({
+                "amount": {
+                    "value": f"{cost}",
+                    "currency": "RUB"
+                },
+                "confirmation": {
+                    "type": "redirect",
+                    "return_url": redirect_url
+                },
+                "capture": True,
+                "description": f"{order}",
+                "metadata": {"order": order.id}
+            }, uuid.uuid4())
+            confirmation_url = payment.confirmation.confirmation_url
+            return redirect(confirmation_url)
 
-        # payment = create_payment(ACCOUNT_ID, U_KEY, description, return_url, order)
-        # confirmation_url = payment.confirmation.confirmation_url
-
-        # order.yookassa_id = payment.id
-        order.save()
-
-        # return redirect(confirmation_url)
-    return render(request, 'users/order.html')
+        except MultiValueDictKeyError:
+            return render(request, 'users/order.html', context={'cost': cost})
+    else:
+        context = {
+            'cost': '0000',
+        }
+    return render(request, 'users/order.html', context=context)
