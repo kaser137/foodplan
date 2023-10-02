@@ -1,6 +1,7 @@
 import random
 
-from foodplan_site.models import Receipt, Product, ProductInReceipt, Order, Price
+import foodplan_site
+from foodplan_site.models import Receipt, Product, ProductInReceipt, Order, Price, Promo
 
 
 def choosing(some_list):
@@ -80,3 +81,39 @@ def cost(dictionary):
         if attr_order != '0':
             amount += dictionary['period'] * 30 * attrs_price[attr]
     return amount * dictionary['person'] * (1 - dictionary['discount'] / 100)
+
+
+def make_order_dict(request):
+    order_data = {
+        'period': int(request.GET['month_duration']),
+        'breakfast': request.GET['select1'],
+        'dinner': request.GET['select2'],
+        'supper': request.GET['select3'],
+        'dessert': request.GET['select4'],
+        'person': int(request.GET['select5']) + 1,
+        'classic': False,
+        'lowcarb': False,
+        'vegan': False,
+        'keto': False,
+        'allergic': [],
+        'promo': request.GET['promo'],
+    }
+    if request.GET['foodtype'] == 'classic':
+        order_data['classic'] = True
+    if request.GET['foodtype'] == 'low':
+        order_data['lowcarb'] = True
+    if request.GET['foodtype'] == 'veg':
+        order_data['vegan'] = True
+    if request.GET['foodtype'] == 'keto':
+        order_data['keto'] = True
+    for num_allergen in range(1, 7):
+        allergen = f'allergy{num_allergen}'
+        if allergen in request.GET:
+            order_data[allergen] = True
+            order_data['allergic'].append(num_allergen)
+    try:
+        promo = Promo.objects.get(promokod=order_data['promo'])
+        order_data['discount'] = promo.discount
+    except foodplan_site.models.Promo.DoesNotExist:
+        order_data['discount'] = 0
+    return order_data

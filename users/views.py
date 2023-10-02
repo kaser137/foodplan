@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.utils.http import urlencode
 from foodplan_site import functions
 import foodplan_site
-from foodplan_site.functions import menu
+from foodplan_site.functions import menu, make_order_dict
 from users.forms import UserLoginForm, UserRegistrationForm, UserProfileForm
 from users.models import User
 from foodplan_site.models import Order, Promo
@@ -86,75 +86,12 @@ def order(request):
             return render(request, 'users/order.html', context={'cost': cost, 'dic': order_data})
         pay = request.GET.get('pay', None)
         if not pay:
-            order_data = {
-                'period': int(request.GET['month_duration']),
-                'breakfast': request.GET['select1'],
-                'dinner': request.GET['select2'],
-                'supper': request.GET['select3'],
-                'dessert': request.GET['select4'],
-                'person': int(request.GET['select5']) + 1,
-                'classic': False,
-                'lowcarb': False,
-                'vegan': False,
-                'keto': False,
-                'allergic': [],
-                'promo': request.GET['promo'],
-            }
-            if request.GET['foodtype'] == 'classic':
-                order_data['classic'] = True
-            if request.GET['foodtype'] == 'low':
-                order_data['lowcarb'] = True
-            if request.GET['foodtype'] == 'veg':
-                order_data['vegan'] = True
-            if request.GET['foodtype'] == 'keto':
-                order_data['keto'] = True
-            for num_allergen in range(1, 7):
-                allergen = f'allergy{num_allergen}'
-                if allergen in request.GET:
-                    order_data[allergen] = True
-                    order_data['allergic'].append(num_allergen)
-            try:
-                promo = Promo.objects.get(promokod=order_data['promo'])
-                order_data['discount'] = promo.discount
-            except foodplan_site.models.Promo.DoesNotExist:
-                order_data['discount'] = 0
-
+            order_data = make_order_dict(request)
             cost = functions.cost(order_data)
             return render(request, 'users/order.html', context={'cost': cost, 'dic': order_data})
         else:
             if not order_data:
-                order_data = {
-                    'period': int(request.GET['month_duration']),
-                    'breakfast': request.GET['select1'],
-                    'dinner': request.GET['select2'],
-                    'supper': request.GET['select3'],
-                    'dessert': request.GET['select4'],
-                    'person': int(request.GET['select5']) + 1,
-                    'classic': False,
-                    'lowcarb': False,
-                    'vegan': False,
-                    'keto': False,
-                    'allergic': [],
-                    'promo': request.GET['promo'],
-                }
-                if request.GET['foodtype'] == 'classic':
-                    order_data['classic'] = True
-                if request.GET['foodtype'] == 'low':
-                    order_data['lowcarb'] = True
-                if request.GET['foodtype'] == 'veg':
-                    order_data['vegan'] = True
-                if request.GET['foodtype'] == 'keto':
-                    order_data['keto'] = True
-                for num_allergen in range(1, 7):
-                    allergen = f'allergy{num_allergen}'
-                    if allergen in request.GET:
-                        order_data[allergen] = True
-                        order_data['allergic'].append(num_allergen)
-                try:
-                    promo = Promo.objects.get(promokod=order_data['promo'])
-                    order_data['discount'] = promo.discount
-                except foodplan_site.models.Promo.DoesNotExist:
-                    order_data['discount'] = 0
+                order_data = make_order_dict(request)
             order = Order.objects.create(
                 user=user,
                 breakfast=order_data['breakfast'],
