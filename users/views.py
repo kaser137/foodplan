@@ -108,8 +108,6 @@ def order(request):
                 order_data['vegan'] = True
             if request.GET['foodtype'] == 'keto':
                 order_data['keto'] = True
-            # except MultiValueDictKeyError:
-            #     order_data['classic'] = True
             for num_allergen in range(1, 7):
                 allergen = f'allergy{num_allergen}'
                 if allergen in request.GET:
