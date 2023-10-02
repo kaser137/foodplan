@@ -124,7 +124,7 @@
                                                         {% else %}
                                                             <p><a href="{% url 'card' %}?receipt_id={{i.dessert.id}}&next={{path}}">Десерт: {{i.dessert.name}}</a></p>
                                                             <div class="col-2">
-                                                                <img src="{% if i.supper.image %} {{ i.supper.image.url }} {% else %} {% static 'img/circle1.png' %} {% endif %}"
+                                                                <img src="{% if i.dessert.image %} {{ i.dessert.image.url }} {% else %} {% static 'img/circle1.png' %} {% endif %}"
                                                                      alt="" class="w-100">
                                                             </div>
                                                         {% endif %}

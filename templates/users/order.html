@@ -31,34 +31,30 @@
                 <h5 class="text-secondary mb-3">Вам будет доступно 4 типа меню: Классическое, Низкоуглеводное, Вегетарианское и Кето.</h5>
                 <div class="row mb-5">
                     <div class="col-6 col-md-3">
-                        
                         <label for="classic" class="position-relative" style="cursor: pointer;">
                             <img src="{% static 'img/menu_classical.png' %}" alt="" class="w-100">
-                            <input form="order" type="radio" name="foodtype" id="classic" value="classic" class="foodplan_selected d-none">
+                            <input form="order" {% if not dic or dic.classic %} checked {% endif %} type="radio" name="foodtype" id="classic" value="classic" class="foodplan_selected d-none">
                             <div class="img_selected" id="img1"></div>
                         </label>
                     </div>
                     <div class="col-6 col-md-3">
-                        
                         <label for="low" class="position-relative" style="cursor: pointer;">
                             <img src="{% static 'img/menu_nizkougl.png' %}" alt="" class="w-100">
-                            <input form="order" type="radio" name="foodtype" id="low" value="low" class="foodplan_selected d-none">
+                            <input form="order" {% if dic.lowcarb %} checked {% endif %} type="radio" name="foodtype" id="low" value="low" class="foodplan_selected d-none">
                             <div class="img_selected" id="img2"></div>
                         </label>
                     </div>
                     <div class="col-6 col-md-3">
-                        
                         <label for="veg" class="position-relative" style="cursor: pointer;">
                             <img src="{% static 'img/menu_veg.png' %}"  alt="" class="w-100">
-                            <input form="order" type="radio" name="foodtype" id="veg" value="veg" class="foodplan_selected d-none">
+                            <input form="order" {% if dic.vegan %} checked {% endif %} type="radio" name="foodtype" id="veg" value="veg" class="foodplan_selected d-none">
                             <div class="img_selected" id="img3"></div>
                         </label>
                     </div>
                     <div class="col-6 col-md-3">
-                        
                         <label for="keto" class="position-relative" style="cursor: pointer;">
                             <img src="{% static 'img/menu_keto.png' %}"  alt="" class="w-100">
-                            <input form="order" type="radio" name="foodtype" id="keto" value="keto" class="foodplan_selected d-none">
+                            <input form="order" {% if dic.keto %} checked {% endif %} type="radio" name="foodtype" id="keto" value="keto" class="foodplan_selected d-none">
                             <div class="img_selected" id="img4"></div>
                         </label>
                     </div>
@@ -71,19 +67,20 @@
                             <th scope="row" class="text-start">Срок</th>
                             <td>
                                 <select name="month_duration" class="form-select">
-                                    <option value="1" selected>1 мес.</option>
-                                    <option value="3">3 мес.</option>
-                                    <option value="6">6 мес.</option>
-                                    <option value="12">12 мес.</option>
+                                    <option value="1" {% if not dic or dic.period == 1 %} selected {% endif %}>1 мес.</option>
+                                    <option value="3" {% if dic.period == 3 %} selected {% endif %}>3 мес.</option>
+                                    <option value="6" {% if dic.period == 6 %} selected {% endif %}>6 мес.</option>
+                                    <option value="12" {% if dic.period == 12 %} selected {% endif %}>12 мес.</option>
                                 </select>
                             </td>
                         </tr>
                         <tr>
                             <th scope="row" class="text-start">Завтраки</th>
                             <td>
+
                                 <select name="select1" class="form-select">
-                                    <option value="1" selected>&#10004;</option>
-                                    <option value="0">&#10008;</option>
+                                    <option value="1" {% if not dic or dic.breakfast == '1' %} selected {% endif %}>&#10004;</option>
+                                    <option value="0" {% if dic.breakfast == '0' %} selected {% endif %}>&#10008;</option>
                                 </select>
                             </td>
                         </tr>
@@ -91,8 +88,8 @@
                             <th scope="row" class="text-start">Обеды</th>
                             <td>
                                 <select name="select2" class="form-select">
-                                    <option value="1" selected>&#10004;</option>
-                                    <option value="0">&#10008;</option>
+                                    <option value="1" {% if not dic or dic.dinner == '1' %} selected {% endif %}>&#10004;</option>
+                                    <option value="0" {% if dic.dinner == '0' %} selected {% endif %}>&#10008;</option>
                                 </select>
                             </td>
                         </tr>
@@ -100,8 +97,8 @@
                             <th scope="row" class="text-start">Ужины</th>
                             <td>
                                 <select name="select3" class="form-select">
-                                    <option value="1" selected>&#10004;</option>
-                                    <option value="0">&#10008;</option>
+                                    <option value="1" {% if not dic or dic.supper == '1' %} selected {% endif %}>&#10004;</option>
+                                    <option value="0" {% if dic.supper == '0' %} selected {% endif %}>&#10008;</option>
                                 </select>
                             </td>
                         </tr>
@@ -109,8 +106,8 @@
                             <th scope="row" class="text-start">Десерты</th>
                             <td>
                                 <select name="select4" class="form-select">
-                                    <option value="1" selected>&#10004;</option>
-                                    <option value="0">&#10008;</option>
+                                    <option value="1" {% if not dic or dic.dessert == '1' %} selected {% endif %}>&#10004;</option>
+                                    <option value="0" {% if dic.dessert == '0' %} selected {% endif %}>&#10008;</option>
                                 </select>
                             </td>
                         </tr>
@@ -118,12 +115,12 @@
                             <th scope="row" class="text-start">Кол-во персон</th>
                             <td>
                                 <select name="select5" class="form-select">
-                                    <option value="0" selected>1</option>
-                                    <option value="1">2</option>
-                                    <option value="2">3</option>
-                                    <option value="3">4</option>
-                                    <option value="4">5</option>
-                                    <option value="5">6</option>
+                                    <option value="0" {% if not dic or dic.person == 1 %} selected {% endif %} >1</option>
+                                    <option value="1" {% if dic.person == 2 %} selected {% endif %}>2</option>
+                                    <option value="2" {% if dic.person == 3 %} selected {% endif %}>3</option>
+                                    <option value="3"{% if dic.person == 4 %} selected {% endif %}>4</option>
+                                    <option value="4" {% if dic.person == 5 %} selected {% endif %}>5</option>
+                                    <option value="5" {% if dic.person == 6 %} selected {% endif %}>6</option>
                                 </select>
                             </td>
                         </tr>
@@ -131,37 +128,43 @@
                             <th scope="row" class="text-start">Аллергии</th>
                             <td>
                                 <div class="form-check d-flex justify-content-start">
-                                    <input class="form-check-input me-1 foodplan_checked-green" type="checkbox" value="" name="allergy1">
+                                    <input class="form-check-input me-1 foodplan_checked-green" type="checkbox" value=""
+                                           name="allergy1" {% if dic.allergy1 %} checked {% endif %}>
                                     <label class="form-check-label" for="allergy1">
                                         Рыба и морепродукты
                                     </label>
                                 </div>
                                 <div class="form-check d-flex justify-content-start">
-                                    <input class="form-check-input me-1 foodplan_checked-green" type="checkbox" value="" name="allergy2">
+                                    <input class="form-check-input me-1 foodplan_checked-green" type="checkbox" value=""
+                                           name="allergy2" {% if dic.allergy2 %} checked {% endif %}>
                                     <label class="form-check-label" for="allergy2">
                                         Мясо
                                     </label>
                                 </div>
                                 <div class="form-check d-flex justify-content-start">
-                                    <input class="form-check-input me-1 foodplan_checked-green" type="checkbox" value="" name="allergy3">
+                                    <input class="form-check-input me-1 foodplan_checked-green" type="checkbox" value=""
+                                           name="allergy3" {% if dic.allergy3 %} checked {% endif %}>
                                     <label class="form-check-label" for="allergy3">
                                         Зерновые
                                     </label>
                                 </div>
                                 <div class="form-check d-flex justify-content-start">
-                                    <input class="form-check-input me-1 foodplan_checked-green" type="checkbox" value="" name="allergy4">
+                                    <input class="form-check-input me-1 foodplan_checked-green" type="checkbox" value=""
+                                           name="allergy4" {% if dic.allergy4 %} checked {% endif %}>
                                     <label class="form-check-label" for="allergy4">
                                         Продукты пчеловодства
                                     </label>
                                 </div>
                                 <div class="form-check d-flex justify-content-start">
-                                    <input class="form-check-input me-1 foodplan_checked-green" type="checkbox" value="" name="allergy5">
+                                    <input class="form-check-input me-1 foodplan_checked-green" type="checkbox" value=""
+                                           name="allergy5" {% if dic.allergy5 %} checked {% endif %}>
                                     <label class="form-check-label" for="allergy5">
                                         Орехи и бобовые
                                     </label>
                                 </div>
                                 <div class="form-check d-flex justify-content-start">
-                                    <input class="form-check-input me-1 foodplan_checked-green" type="checkbox" value="" name="allergy6">
+                                    <input class="form-check-input me-1 foodplan_checked-green" type="checkbox" value=""
+                                           name="allergy6" {% if dic.allergy6 %} checked {% endif %}>
                                     <label class="form-check-label" for="allergy6">
                                         Молочные продукты
                                     </label>
@@ -177,12 +180,6 @@
                     <button type="submit" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">Применить</button>
                 </div>
                 </form>
-
-<!--                <div class="card d-flex flex-row align-items-baseline mb-5 p-3 foodplan__bg_grey">-->
-<!--                    <label class="form-label me-2">Промокод</label>-->
-<!--                    <input type="text" class="form-control me-2" >-->
-<!--                    <button type="submit" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">Применить</button>-->
-<!--                </div>-->
                 <div class="d-flex justify-content-center my-5">
                     <button form="order" value="1" name="pay" type="submit" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green w-50">Оплатить</button>
                 </div>

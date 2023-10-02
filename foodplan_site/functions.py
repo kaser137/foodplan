@@ -51,7 +51,6 @@ def menu(user_id):
         receipts = [k for k in Receipt.objects.all() if
                     k not in [i.receipt for i in invalid_products_in_receipt] and k not in [i.receipt for i in
                                                                                             wrong_products_in_receipt]]
-        # order.sut = range(1, order.period * 30 + 1)
         order.days = []
         for day in range(0, order.period * 30):
             order.days.append({})
@@ -78,6 +77,6 @@ def cost(dictionary):
     amount = 0
     for attr in attrs_price:
         attr_order = dictionary.get(attr, None)
-        if attr_order:
+        if attr_order != '0':
             amount += dictionary['period'] * 30 * attrs_price[attr]
-    return amount*dictionary['person']*(1-dictionary['discount']/100)
+    return amount * dictionary['person'] * (1 - dictionary['discount'] / 100)
