@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.html import format_html
 
 from foodplan_site.models import Product, Receipt, ProductInReceipt, Order, Price, Promo
 
@@ -21,8 +22,16 @@ class ProductInReceiptInline(admin.TabularInline):
 @admin.register(Receipt)
 class ReceiptAdmin(admin.ModelAdmin):
     readonly_fields = [
-        'calories'
+        'preview',
+        'calories',
     ]
+
+    @staticmethod
+    def preview(obj):
+        return format_html('<img src="{}" style="max-height: {}px;" />',
+                           obj.image.url,
+                           200,
+                           )
     inlines = [
         ProductInReceiptInline,
     ]

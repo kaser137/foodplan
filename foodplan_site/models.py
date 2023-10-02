@@ -64,9 +64,6 @@ class Receipt(models.Model):
         blank=True,
         null=True,
     )
-    image = models.ImageField(
-        'фото рецепта',
-    )
     breakfast = models.BooleanField(
         'завтрак',
         default=False,
@@ -82,6 +79,11 @@ class Receipt(models.Model):
     dessert = models.BooleanField(
         'десерт',
         default=False,
+    )
+    image = models.ImageField(
+        'фото рецепта',
+        blank=True,
+        null=True
     )
 
     def calories(self):

@@ -98,6 +98,12 @@
                                                         {% if i.dinner == "время голодать" %}
                                                             <p>Обеда нет: {{i.dinner}}</p>
                                                         {% else %}
+                                                            <p><a href="{% url 'card' %}?receipt_id={{i.dinner.id}}&next={{path}}">Обед: {{i.dinner.name}}</a></p>
+                                                            <div class="col-2">
+                                                                <img src="{% if i.dinner.image %} {{ i.dinner.image.url }} {% else %} {% static 'img/circle1.png' %} {% endif %}"
+                                                                    alt="" class="w-100">
+                                                            </div>
+
 
                                                         {% endif %}
                                                         {% endif %}
