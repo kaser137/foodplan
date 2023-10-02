@@ -137,7 +137,7 @@ def order(request):
                 discount=order_data['discount']
             )
             order.save()
-            redirect_url = 'http://127.0.0.1:8000/users/order/' + '?' + urlencode({'?!@': order.id})
+            redirect_url = 'http://147.182.233.67:4000/users/order/' + '?' + urlencode({'?!@': order.id})
             Configuration.account_id = ACCOUNT_ID
             Configuration.secret_key = U_KEY
             payment = Payment.create({
